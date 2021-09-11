@@ -1,0 +1,317 @@
+# 'sudo' is enabled automatically by the 'apt' addon below.
+#sudo: false 
+#sudo: required
+
+language: python            # this works for Linux but is an error on macOS or Windows
+
+# https://docs.travis-ci.com/user/languages/python/#running-python-tests-on-multiple-operating-systems
+# https://docs.travis-ci.com/user/reference/trusty#python-images
+# https://docs.travis-ci.com/user/reference/xenial#python-support
+matrix:
+  include:
+  - name: Python 2.7.15 on Xenial Linux use pcl 1.7
+    dist: xenial
+    python: '2.7'
+    compiler: gcc
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        packages:
+        - openni2-utils
+        - build-essential
+    env:
+    - PCL_VERSION="1.7"
+    - OS_VERSION="xenial"
+    - NOSEATTR="not pcl_ver_0_4 and not pcl_over_18"
+    - MATRIX_EVAL="CC=gcc && CXX=g++"
+  - name: Python 3.5 on Xenial Linux use pcl 1.7
+    dist: xenial
+    python: '3.5'
+    compiler: gcc
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        packages:
+        - openni2-utils
+        - build-essential
+    env:
+    - PCL_VERSION="1.7"
+    - OS_VERSION="xenial"
+    - NOSEATTR="not pcl_ver_0_4 and not pcl_over_18"
+    - MATRIX_EVAL="CC=gcc && CXX=g++"
+  - name: Python 3.6 on Xenial Linux use pcl 1.7
+    dist: xenial
+    python: '3.6'
+    compiler: gcc
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        packages:
+        - openni2-utils
+        - build-essential
+    env:
+    - PCL_VERSION="1.7"
+    - OS_VERSION="xenial"
+    - NOSEATTR="not pcl_ver_0_4 and not pcl_over_18"
+    - MATRIX_EVAL="CC=gcc && CXX=g++"
+  - name: Python 3.7.1 on Xenial Linux use pcl 1.7
+    dist: xenial
+    python: '3.7'
+    compiler: gcc
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        packages:
+        - openni2-utils
+        - build-essential
+    env:
+    - PCL_VERSION="1.7"
+    - OS_VERSION="xenial"
+    - NOSEATTR="not pcl_ver_0_4 and not pcl_over_18"
+    - MATRIX_EVAL="CC=gcc && CXX=g++"
+  # - name: Python 3.7.1 on Xenial Linux use pcl 1.8
+  #   dist: xenial
+  #   python: '3.7'
+  #   addons:
+  #     apt:
+  #       sources:
+  #       - ubuntu-toolchain-r-test
+  #       packages:
+  #       - openni2-utils
+  #   env:
+  #   - PCL_VERSION="1.8"
+  #   - OS_VERSION="xenial"
+  #   - NOSEATTR="not pcl_ver_0_4 and not pcl_over_18"
+  #   - MATRIX_EVAL="CC=gcc && CXX=g++"
+  # - name: Python 3.7.1 on Xenial Linux use pcl 1.9
+  #   dist: xenial
+  #   python: '3.7'
+  #   addons:
+  #     apt:
+  #       sources:
+  #       - ubuntu-toolchain-r-test
+  #       packages:
+  #       - openni2-utils
+  #   env:
+  #   - PCL_VERSION="1.9"
+  #   - OS_VERSION="xenial"
+  #   - NOSEATTR="not pcl_ver_0_4 and not pcl_over_18"
+  #   - MATRIX_EVAL="CC=gcc && CXX=g++"
+  - name: Python 2.7.15 on Xenial Linux use pcl 1.7(clang)
+    dist: xenial
+    python: '2.7'
+    compiler: clang
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+    env:
+    - PCL_VERSION="1.7"
+    - OS_VERSION="xenial"
+    - NOSEATTR="not pcl_ver_0_4 and not pcl_over_18"
+    - MATRIX_EVAL="CC=clang && CXX=clang++"
+  - name: Python 3.5 on Xenial Linux use pcl 1.7(clang)
+    dist: xenial
+    python: '3.5'
+    compiler: clang
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        packages:
+        - openni2-utils
+    env:
+    - PCL_VERSION="1.7"
+    - OS_VERSION="xenial"
+    - NOSEATTR="not pcl_ver_0_4 and not pcl_over_18"
+    - MATRIX_EVAL="CC=clang && CXX=clang++"
+  - name: Python 3.6 on Xenial Linux use pcl 1.7(clang)
+    dist: xenial
+    python: '3.6'
+    compiler: clang
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        packages:
+        - openni2-utils
+    env:
+    - PCL_VERSION="1.7"
+    - OS_VERSION="xenial"
+    - NOSEATTR="not pcl_ver_0_4 and not pcl_over_18"
+    - MATRIX_EVAL="CC=clang && CXX=clang++"
+  - name: Python 3.7 on Xenial Linux use pcl 1.7(clang)
+    dist: xenial
+    python: '3.7'
+    compiler: clang
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        packages:
+        - openni2-utils
+    env:
+    - PCL_VERSION="1.7"
+    - OS_VERSION="xenial"
+    - NOSEATTR="not pcl_ver_0_4 and not pcl_over_18"
+    - MATRIX_EVAL="CC=clang && CXX=clang++"
+  # - name: Python 3.7 on Xenial Linux use pcl 1.8(clang)
+  #   dist: xenial
+  #   python: '3.7'
+  #   compiler: clang
+  #   addons:
+  #     apt:
+  #       sources:
+  #       - ubuntu-toolchain-r-test
+  #       packages:
+  #       - openni2-utils
+  #   env:
+  #   - PCL_VERSION="1.8"
+  #   - OS_VERSION="xenial"
+  #   - NOSEATTR="not pcl_ver_0_4 and not pcl_over_18"
+  #   - MATRIX_EVAL="CC=clang && CXX=clang++"
+  # - name: Python 3.7 on Xenial Linux use pcl 1.9(clang)
+  #   dist: xenial
+  #   python: '3.7'
+  #   compiler: clang
+  #   addons:
+  #     apt:
+  #       sources:
+  #       - ubuntu-toolchain-r-test
+  #       packages:
+  #       - openni2-utils
+  #   env:
+  #   - PCL_VERSION="1.9"
+  #   - OS_VERSION="xenial"
+  #   - NOSEATTR="not pcl_ver_0_4 and not pcl_over_18"
+  #   - MATRIX_EVAL="CC=clang && CXX=clang++"
+  - name: Python 2.7.16 on macOS using homebrew
+    os: osx
+    language: generic
+    env:
+    - PYTHON_VERSION=2.7.16
+    - PYENV_ROOT=~/.pyenv
+    - PATH=$PYENV_ROOT/shims:$PATH:$PYENV_ROOT/bin
+    - NOSEATTR="not pcl_ver_0_4"
+  - name: Python 3.5.7 on macOS using homebrew
+    os: osx
+    language: generic
+    env:
+    - PYTHON_VERSION=3.5.7
+    - PYENV_ROOT=~/.pyenv
+    - PATH=$PYENV_ROOT/shims:$PATH:$PYENV_ROOT/bin
+    - NOSEATTR="not pcl_ver_0_4"
+  - name: Python 3.6.8 on macOS using homebrew
+    os: osx
+    language: generic
+    env:
+    - PYTHON_VERSION=3.6.8
+    - PYENV_ROOT=~/.pyenv
+    - PATH=$PYENV_ROOT/shims:$PATH:$PYENV_ROOT/bin
+    - NOSEATTR="not pcl_ver_0_4"
+  - name: Python 3.7.3 on macOS using homebrew
+    os: osx
+    language: generic
+    env:
+    - PYTHON_VERSION=3.7.3
+    - PYENV_ROOT=~/.pyenv
+    - PATH=$PYENV_ROOT/shims:$PATH:$PYENV_ROOT/bin
+    - NOSEATTR="not pcl_ver_0_4"
+cache:
+- pip
+- ccache
+before_cache:
+- brew cleanup
+before_install:
+  - if [ ${TRAVIS_OS_NAME} = "osx" ]; then
+      brew update >/dev/null;
+
+      pyenv install $PYTHON_VERSION;
+      pyenv global $PYTHON_VERSION;
+      python --version;
+
+      travis_wait 45 brew install pcl;
+    fi
+  - if [[ ( "$TRAVIS_OS_NAME" == "linux" ) && ( "$PCL_VERSION" == "1.7" ) && ( "$OS_VERSION" == "xenial") ]]; then
+      sudo apt -y install libpcl-dev;
+    fi
+  - if [[ ( "$TRAVIS_OS_NAME" == "linux" ) && ( "$PCL_VERSION" == "1.8" ) ]]; then
+      sudo apt -y install g++ doxygen libusb-1.0-0-dev libqhull* libusb-dev libgtest-dev;
+      sudo apt -y install git-core freeglut3-dev pkg-config build-essential
+      sudo apt -y install libflann-dev libflann1.8 libboost-all-dev libeigen3-dev;
+
+      sudo dd if=/dev/zero of=/swapfile bs=1024 count=4194304;
+      sudo mkswap /swapfile;
+      sudo swapon /swapfile;
+
+      sudo apt-get install ninja-build;
+
+      wget https://github.com/PointCloudLibrary/pcl/archive/pcl-1.8.1.tar.gz;
+      tar -xf pcl-1.8.1.tar.gz;
+      cd pcl-pcl-1.8.1 && mkdir build && cd build;
+      cmake -G Ninja -DWITH_OPENGL:BOOL=OFF -DWITH_FZAPI:BOOL=OFF -DWITH_LIBUSB:BOOL=OFF -DWITH_VTK:BOOL=OFF -DBUILD_OPENNI:BOOL=OFF -DBUILD_OPENNI2:BOOL=OFF -DBUILD_apps:BOOL=OFF -DBUILD_geometry:BOOL=OFF -DBUILD_global_tests:BOOL=OFF -DBUILD_outofcore:BOOL=OFF -DBUILD_people:BOOL=OFF -DBUILD_tools:BOOL=OFF -DBUILD_tracking:BOOL=OFF -DBUILD_visualization:BOOL=OFF -DBUILD_examples:BOOL=OFF ..;
+
+      travis_wait 50 ninja -j4;
+      sudo ninja -t targets install;
+      cd ../..;
+    fi
+  - if [[ ( "$TRAVIS_OS_NAME" == "linux" ) && ( "$PCL_VERSION" == "1.9" ) ]]; then
+      sudo apt -y install g++ doxygen libusb-1.0-0-dev libqhull* libusb-dev libgtest-dev;
+      sudo apt -y install git-core freeglut3-dev pkg-config build-essential
+      sudo apt -y install libflann-dev libflann1.8 libboost-all-dev libeigen3-dev;
+
+      sudo dd if=/dev/zero of=/swapfile bs=1024 count=4194304;
+      sudo mkswap /swapfile;
+      sudo swapon /swapfile;
+
+      sudo apt-get install ninja-build;
+
+      wget https://github.com/PointCloudLibrary/pcl/archive/pcl-1.9.1.tar.gz;
+      tar -xf pcl-1.9.1.tar.gz;
+      cd pcl-1.9.1 && mkdir build && cd build;
+      cmake -G Ninja -DWITH_OPENGL:BOOL=OFF -DWITH_FZAPI:BOOL=OFF -DWITH_LIBUSB:BOOL=OFF -DWITH_VTK:BOOL=OFF -DBUILD_OPENNI:BOOL=OFF -DBUILD_OPENNI2:BOOL=OFF -DBUILD_apps:BOOL=OFF -DBUILD_geometry:BOOL=OFF -DBUILD_global_tests:BOOL=OFF -DBUILD_outofcore:BOOL=OFF -DBUILD_people:BOOL=OFF -DBUILD_tools:BOOL=OFF -DBUILD_tracking:BOOL=OFF -DBUILD_visualization:BOOL=OFF -DBUILD_examples:BOOL=OFF ..;
+
+      travis_wait 50 ninja -j4;
+      sudo ninja -t targets install;
+      cd ../..;
+    fi
+
+install:
+  - pip install --upgrade pip
+  - pip install -r requirements.txt
+  - pip install wheel
+  - pip install twine
+  - pip install nose
+  # coveralls
+  - pip install pytest
+  - pip install coveralls
+
+  - python setup.py build_ext -i
+  - python setup.py install
+  # - python setup.py sdist bdist_wheel
+  # - twine upload dist/*
+
+# command to run tests
+script:
+  # - coverage run --parallel-mode tests/test_pcl.py
+  # - coverage run --parallel-mode tests/test_registration.py
+  # - nosetests -A "$NOSEATTR" --with-coverage --cover-erase --cover-package=python-pcl --verbose
+  # - nosetests -A "not pcl_ver_0_4 and not pcl_over_18" --with-coverage --cover-erase --cover-package=python-pcl --verbose
+  - nosetests -A "not pcl_ver_0_4 and not pcl_over_18" --verbose
+after_success:
+  # coveralls.io
+  - coverage combine
+  - coveralls
+# deploy:
+#   provider: pypi
+#   user: sirokujira
+#   password:
+#     secure: zz1i5hJ9zdXZ+WryKx5PrughDzlJqClAAeEaVgyEQ/almoYkJANWUDW/MbI/Lf39lvhVWwhU7eSai/wPAxasNTSb9L60IFAfqmLDVYzgi2oqBnVrG2la5RDM0ccObwYlmnEjP+08S/R+049kHSEtsu2dszt2Mmko4EUvyzdO5TqYum6pNmB/8XZYRaVVNixva4C76aYDfJ3yfOyJl/pUQoPS3T0u/DWzAJuTgzMS0SRwtEFsno3BK1cRW8cpUThF8/LWGX6Q4C0pReGi4II8bZtlgggrqDZNEszXyGxEbyIvJM7BkxB6uu6AFQtro5ciR3mwSlx5++3KZ6rb9R6nON1HqtrCBiX1TNcBvB7qpYl0hRnAjpDaBmLvK8l74py0sKqb5kpxHUCQ2N24OlVGGf6zC26AuLuJjmq4t9z8A3C9RG+OV0nznY68EsbgHF0pVNbp/TNpfmGG4pXG23exHkFz+kirQGMe4BcQGMIzc1ULpmdu/iaM47BzvsKW18BYT1PY3EkqDWjNR83aFV/YI52L+jzxSkE+GVfkDqARRlP63dE5tfio4+wE84gNgiZwh/zCpBO+Kf4jPDSG2smfHnFQL37COxoLF4R3sUFlY/oUCaXNSuIeLrTtIVk12MzYWZIVm5IxjVUlJIzMJVY7ilexS8MzZgK4lwnpWNFwxyc=
+#   on:
+#     # test
+#     branch: rc_patches4
+#     # skip_existing: true
