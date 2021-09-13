@@ -24,6 +24,7 @@ sys.path.append(os.path.join(BASE_DIR, '../common'))
 from configs import FLAGS
 from pc_io import get_all_files
 from read_las import read_las
+from filter import passThroughFilter, voxelGrid, project_inliers, remove_outlier, StatisticalOutlierRemovalFilter
 
 
 class PointCloud_FormatFactory(object):
@@ -763,6 +764,218 @@ class PointCloud_FormatFactory(object):
 
         print(f"Finished! Results are saved in {self.opts.output_dir}, Time Cost: {time()-t1} s")
 
+    def filter(self):
+        """
+        点云/mesh 滤波
+        :return: 滤波之后的点云/mesh
+        """
+        for i in range(self.filenum):
+            print("Processing: ", self.filelist[i])
+            file_path = self.filelist[i]  # 要处理的文件
+            input_pc_format = self.opts.input_format
+            filters = self.opts.filter
+            # 检查输入输出文件格式是否合法
+            assert input_pc_format in ["xyz", "pcd", "pts", "ply", "txt", "off", "obj", "stl"]
+            # ["xyz", "pcd", "ply"]
+            if self.opts.type == "pc":
+                assert input_pc_format in ["xyz", "pcd", "pts", "ply", "txt"]
+                if input_pc_format in ["xyz", "pcd", "ply"]:
+                    # 获取文件名
+                    stem = Path(file_path).stem
+                    # 输出文件夹不存在则创建
+                    pathlib.Path(self.opts.output_dir).mkdir(parents=True, exist_ok=True)
+                    # 以原格式输出
+                    output_file = self.opts.output_dir + stem + '.' + input_pc_format
+                    pc = o3d.io.read_point_cloud(file_path)
+                    xyz = np.asarray(pc.points, dtype=np.float32)
+                    # print(xyz)
+                    if filters == "PassThroughFilter":
+                        # You need set suitable upper limit value of passThroughFilter, or you will get 0 point.
+                        upper_limit = self.opts.upper_limit
+                        filter_pc = passThroughFilter(xyz, upper_limit)
+                        pcd = o3d.geometry.PointCloud()
+                        pcd.points = o3d.utility.Vector3dVector(filter_pc)
+                        o3d.io.write_point_cloud(output_file, pcd)
+                    elif filters == "VoxelGridFilter":
+                        # You need set suitable voxel size of passThroughFilter
+                        voxel_size = self.opts.voxel_size
+                        filter_pc = voxelGrid(xyz, voxel_size)
+                        pcd = o3d.geometry.PointCloud()
+                        pcd.points = o3d.utility.Vector3dVector(filter_pc)
+                        o3d.io.write_point_cloud(output_file, pcd)
+                    elif filters == "project_inliers":
+                        filter_pc = project_inliers(xyz)
+                        pcd = o3d.geometry.PointCloud()
+                        pcd.points = o3d.utility.Vector3dVector(filter_pc)
+                        o3d.io.write_point_cloud(output_file, pcd)
+                    elif filters == "remove_outliers":
+                        choices = self.opts.removal
+                        radius = self.opts.radius
+                        min_neighbor = self.opts.min_neighbor
+                        # Maybe you should set suitable radius and min_neighbor
+                        filter_pc = remove_outlier(xyz, choices, radius, min_neighbor)
+                        pcd = o3d.geometry.PointCloud()
+                        pcd.points = o3d.utility.Vector3dVector(filter_pc)
+                        o3d.io.write_point_cloud(output_file, pcd)
+                    elif filters == "statistical_removal":
+                        std_dev = self.opts.std_dev
+                        # Maybe you should set suitable std_dev
+                        filter_pc = StatisticalOutlierRemovalFilter(xyz, std_dev)
+                        pcd = o3d.geometry.PointCloud()
+                        pcd.points = o3d.utility.Vector3dVector(filter_pc)
+                        o3d.io.write_point_cloud(output_file, pcd)
+                    else:
+                        raise Exception("Unsupported filter! Choices = [PassThroughFilter, VoxelGridFilter, "
+                                        "project_inliers, remove_outliers, statistical_removal]")
+                    print("Done! Filtered point cloud is saved in: ", output_file)
+
+                # pts
+                elif input_pc_format == "pts":
+                    with open(file_path, 'r', encoding='utf-8') as f:
+                        lines = f.readlines()
+                        first_line = lines[0].split(' ')
+                        try:
+                            assert len(first_line) == 1
+                            # header
+                            # 获取文件名
+                            stem = Path(file_path).stem
+                            # 输出文件夹不存在则创建
+                            pathlib.Path(self.opts.output_dir).mkdir(parents=True, exist_ok=True)
+                            # 以原格式输出
+                            output_file = self.opts.output_dir + stem + '.' + input_pc_format
+                            pc = o3d.io.read_point_cloud(file_path)
+                            xyz = np.asarray(pc.points, dtype=np.float32)
+                            if filters == "PassThroughFilter":
+                                # You need set suitable upper limit value of passThroughFilter, or you will get 0 point.
+                                upper_limit = self.opts.upper_limit
+                                filter_pc = passThroughFilter(xyz, upper_limit)
+                                pcd = o3d.geometry.PointCloud()
+                                pcd.points = o3d.utility.Vector3dVector(filter_pc)
+                                o3d.io.write_point_cloud(output_file, pcd)
+                            elif filters == "VoxelGridFilter":
+                                # You need set suitable voxel size of passThroughFilter
+                                voxel_size = self.opts.voxel_size
+                                filter_pc = voxelGrid(xyz, voxel_size)
+                                pcd = o3d.geometry.PointCloud()
+                                pcd.points = o3d.utility.Vector3dVector(filter_pc)
+                                o3d.io.write_point_cloud(output_file, pcd)
+                            elif filters == "project_inliers":
+                                filter_pc = project_inliers(xyz)
+                                pcd = o3d.geometry.PointCloud()
+                                pcd.points = o3d.utility.Vector3dVector(filter_pc)
+                                o3d.io.write_point_cloud(output_file, pcd)
+                            elif filters == "remove_outliers":
+                                choices = self.opts.removal
+                                radius = self.opts.radius
+                                min_neighbor = self.opts.min_neighbor
+                                # Maybe you should set suitable radius and min_neighbor
+                                filter_pc = remove_outlier(xyz, choices, radius, min_neighbor)
+                                pcd = o3d.geometry.PointCloud()
+                                pcd.points = o3d.utility.Vector3dVector(filter_pc)
+                                o3d.io.write_point_cloud(output_file, pcd)
+                            elif filters == "statistical_removal":
+                                std_dev = self.opts.std_dev
+                                # Maybe you should set suitable std_dev
+                                filter_pc = StatisticalOutlierRemovalFilter(xyz, std_dev)
+                                pcd = o3d.geometry.PointCloud()
+                                pcd.points = o3d.utility.Vector3dVector(filter_pc)
+                                o3d.io.write_point_cloud(output_file, pcd)
+                            else:
+                                raise Exception("Unsupported filter! Choices = [PassThroughFilter, VoxelGridFilter, "
+                                                "project_inliers, remove_outliers, statistical_removal]")
+                            print("Done! Filtered point cloud is saved in: ", output_file)
+                        except:
+                            # no header
+                            pc = np.loadtxt(file_path, delimiter=' ', dtype=np.float32)
+                            # 获取文件名
+                            stem = Path(file_path).stem
+                            # 输出文件夹不存在则创建
+                            pathlib.Path(self.opts.output_dir).mkdir(parents=True, exist_ok=True)
+                            # 以原格式输出
+                            output_file = self.opts.output_dir + stem + '.' + input_pc_format
+                            if filters == "PassThroughFilter":
+                                # You need set suitable upper limit value of passThroughFilter, or you will get 0 point.
+                                upper_limit = self.opts.upper_limit
+                                filter_pc = passThroughFilter(pc, upper_limit)
+                                pcd = o3d.geometry.PointCloud()
+                                pcd.points = o3d.utility.Vector3dVector(filter_pc)
+                                o3d.io.write_point_cloud(output_file, pcd)
+                            elif filters == "VoxelGridFilter":
+                                # You need set suitable voxel size of passThroughFilter
+                                voxel_size = self.opts.voxel_size
+                                filter_pc = voxelGrid(pc, voxel_size)
+                                pcd = o3d.geometry.PointCloud()
+                                pcd.points = o3d.utility.Vector3dVector(filter_pc)
+                                o3d.io.write_point_cloud(output_file, pcd)
+                            elif filters == "project_inliers":
+                                filter_pc = project_inliers(pc)
+                                pcd = o3d.geometry.PointCloud()
+                                pcd.points = o3d.utility.Vector3dVector(filter_pc)
+                                o3d.io.write_point_cloud(output_file, pcd)
+                            elif filters == "remove_outliers":
+                                choices = self.opts.removal
+                                radius = self.opts.radius
+                                min_neighbor = self.opts.min_neighbor
+                                # Maybe you should set suitable radius and min_neighbor
+                                filter_pc = remove_outlier(pc, choices, radius, min_neighbor)
+                                pcd = o3d.geometry.PointCloud()
+                                pcd.points = o3d.utility.Vector3dVector(filter_pc)
+                                o3d.io.write_point_cloud(output_file, pcd)
+                            elif filters == "statistical_removal":
+                                std_dev = self.opts.std_dev
+                                # Maybe you should set suitable std_dev
+                                filter_pc = StatisticalOutlierRemovalFilter(pc, std_dev)
+                                pcd = o3d.geometry.PointCloud()
+                                pcd.points = o3d.utility.Vector3dVector(filter_pc)
+                                o3d.io.write_point_cloud(output_file, pcd)
+                            else:
+                                raise Exception("Unsupported filter! Choices = [PassThroughFilter, VoxelGridFilter, "
+                                                "project_inliers, remove_outliers, statistical_removal]")
+                            print("Done! Filtered point cloud is saved in: ", output_file)
+                # txt
+                elif input_pc_format == "txt":
+                    pc = np.loadtxt(file_path, delimiter=' ', dtype=np.float32)[:, :3]
+                    # 获取文件名
+                    stem = Path(file_path).stem
+                    # 输出文件夹不存在则创建
+                    pathlib.Path(self.opts.output_dir).mkdir(parents=True, exist_ok=True)
+                    # 以原格式输出
+                    output_file = self.opts.output_dir + stem + '.' + input_pc_format
+                    if filters == "PassThroughFilter":
+                        # You need set suitable upper limit value of passThroughFilter, or you will get 0 point.
+                        upper_limit = self.opts.upper_limit
+                        filter_pc = passThroughFilter(pc, upper_limit)
+                        np.savetxt(output_file, filter_pc)
+                    elif filters == "VoxelGridFilter":
+                        # You need set suitable voxel size of passThroughFilter
+                        voxel_size = self.opts.voxel_size
+                        filter_pc = voxelGrid(pc, voxel_size)
+                        np.savetxt(output_file, filter_pc)
+                    elif filters == "project_inliers":
+                        filter_pc = project_inliers(pc)
+                        np.savetxt(output_file, filter_pc)
+                    elif filters == "remove_outliers":
+                        choices = self.opts.removal
+                        radius = self.opts.radius
+                        min_neighbor = self.opts.min_neighbor
+                        # Maybe you should set suitable radius and min_neighbor
+                        filter_pc = remove_outlier(pc, choices, radius, min_neighbor)
+                        np.savetxt(output_file, filter_pc)
+                    elif filters == "statistical_removal":
+                        std_dev = self.opts.std_dev
+                        # Maybe you should set suitable std_dev
+                        filter_pc = StatisticalOutlierRemovalFilter(pc, std_dev)
+                        np.savetxt(output_file, filter_pc)
+                    else:
+                        raise Exception("Unsupported filter! Choices = [PassThroughFilter, VoxelGridFilter, "
+                                        "project_inliers, remove_outliers, statistical_removal]")
+                    print("Done! Filtered point cloud is saved in: ", output_file)
+                else:
+                    raise Exception("Unsupport input file format. Choices=[xyz, pcd, pts, ply, txt]")
+
+            elif self.opts.type == "mesh":
+                pass
+
     def pc_sample(self):
         """
         点云采样（下采样+上采样）
@@ -792,6 +1005,6 @@ if __name__ == "__main__":
             # mesh转点云
             formatFactory.mesh_to_pc()
         elif FLAGS.mode == 3:
-            # 点云采样
-            formatFactory.pc_sample()
+            # 滤波
+            formatFactory.filter()
 

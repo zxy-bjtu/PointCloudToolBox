@@ -3,3 +3,4 @@ open3d==0.13.0
 plyfile==0.7.4
 numpy==1.21.0
 vtk==8.2.0
+python-pcl==0.3.0rc1

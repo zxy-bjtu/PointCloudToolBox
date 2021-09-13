@@ -112,6 +112,19 @@ python pc_factory.py --mode 2 --input_dir ../data/test --output_dir ../result/po
 # off->xyz(1024p)
 python pc_factory.py --mode 2 --input_dir ../data/test --output_dir ../result/possion/  --input_format off --output_format xyz --sampler uniform_sampling --point_num 1024
 
-# 5. 点云采样
+# 5. 点云/网格滤波
+# 点云滤波
+# Supported format: [ply, xyz, pts, pcd, txt]
+# PassThroughFilter
+python pc_factory.py --mode 3 --type pc --filter PassThroughFilter --upper_limit 5 --input_dir ../data/test --output_dir ../result/filter/PassThroughFilter/ --input_format pcd
+# VoxelGrid
+python pc_factory.py --mode 3 --type pc --filter VoxelGridFilter --voxel_size 0.1 --input_dir ../data/test --output_dir ../result/filter/VoxelGridFilter/ --input_format pcd
+# project_inliers
+python pc_factory.py --mode 3 --type pc --filter project_inliers --input_dir ../data/test --output_dir ../result/filter/project_inliers/ --input_format pcd
+# remove_outlier
+python pc_factory.py --mode 3 --type pc --filter remove_outlier --removal radius --radius 5.0 --min_neighbor 3 --input_dir ../data/test --output_dir ../result/filter/remove_outlier/ --input_format pcd
+python pc_factory.py --mode 3 --type pc --filter remove_outlier --removal condition --radius 5.0 --min_neighbor 3 --input_dir ../data/test --output_dir ../result/filter/remove_outlier/ --input_format pcd
+# statistical_removal
+python pc_factory.py --mode 3 --type pc --filter statistical_removal --std_dev 1.0 --input_dir ../data/test --output_dir ../result/filter/statistical_removal/ --input_format pcd
 
-
+# 网格滤波

@@ -25,6 +25,19 @@ parser.add_argument('--point_num', type=int, default=1024, help="number of point
 parser.add_argument('--factor', type=int, default=5, help="Factor for the initial uniformly sampled PointCloud. "
                                                           "This init PointCloud is used for sample elimination")
 
-
+# pointcloud/mesh filter
+# point cloud filter
+parser.add_argument('--type', type=str, default='pc', help="the file type, [pc, mesh] ")
+# 点云滤波器
+parser.add_argument('--filter', type=str, default='PassThroughFilter',
+                    help="[PassThroughFilter, VoxelGridFilter, project_inliers, remove_outliers, "
+                         "statistical_removal]")
+parser.add_argument('--upper_limit', type=float, default=0.5, help="the upper limit value of passThroughFilter")
+parser.add_argument('--voxel_size', type=float, default=0.01, help="the voxel size of VoxelGridFilter")
+parser.add_argument('--removal', '-r', choices=('radius', 'condition'), default='',
+                    help='RadiusOutlier/Condition Removal')
+parser.add_argument('--radius', type=float, default=1.0, help='search radius for RadiusOutlier')
+parser.add_argument('--min_neighbor', type=int, default=2, help='min neighbors in radius for RadiusOutlier')
+parser.add_argument('--std_dev', type=int, default=1.0, help='std dev used in Statistical Outlier Removal filter')
 
 FLAGS = parser.parse_args()

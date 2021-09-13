@@ -13,6 +13,7 @@ Dependent packages:
 - plyfile==0.7.4
 - numpy==1.21.0
 - vtk==8.2.0
+- python-pcl==0.3.0rc1
 
 How to install the environment:
 # pip install requirements.txt
@@ -31,7 +32,12 @@ How to install the environment:
 - [ ] Point cloud voxelization
 - [ ] downsampling
 - [ ] upsampling
-- [ ] filtering
+- [x] filtering
+    - [x] PassThrough Filter
+    - [x] VoxelGrid Filter
+    - [x] project_inliers Filter
+    - [x] remove_outliers Filter
+    - [x] statistical_removal Filter
 - [ ] registration
 - [ ] 3D reconstruction
 - [ ] visualization
