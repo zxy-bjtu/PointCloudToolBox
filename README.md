@@ -50,7 +50,10 @@ How to install the environment:
 - [x] down sampling into point cloud
     - [x] poisson disk sampling
     - [x] uniform sampling
-- [ ] mesh filtering
+- [x] mesh filtering
+    - [x] Taubin filter
+    - [x] Laplacian smooth
+    - [x] simple neighbour average
 - [ ] mesh voxelization
 - [ ] mesh subdivision
 - [ ] 3d mesh visualization

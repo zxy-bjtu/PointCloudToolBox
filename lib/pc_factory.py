@@ -774,6 +774,7 @@ class PointCloud_FormatFactory(object):
             file_path = self.filelist[i]  # 要处理的文件
             input_pc_format = self.opts.input_format
             filters = self.opts.filter
+            mesh_filters = self.opts.mesh_filter
             # 检查输入输出文件格式是否合法
             assert input_pc_format in ["xyz", "pcd", "pts", "ply", "txt", "off", "obj", "stl"]
             # ["xyz", "pcd", "ply"]
@@ -901,7 +902,7 @@ class PointCloud_FormatFactory(object):
                                 pcd.points = o3d.utility.Vector3dVector(filter_pc)
                                 o3d.io.write_point_cloud(output_file, pcd)
                             elif filters == "VoxelGridFilter":
-                                # You need set suitable voxel size of passThroughFilter
+                                # You need set suitable voxel size of VoxelGridFilter
                                 voxel_size = self.opts.voxel_size
                                 filter_pc = voxelGrid(pc, voxel_size)
                                 pcd = o3d.geometry.PointCloud()
@@ -974,7 +975,58 @@ class PointCloud_FormatFactory(object):
                     raise Exception("Unsupport input file format. Choices=[xyz, pcd, pts, ply, txt]")
 
             elif self.opts.type == "mesh":
-                pass
+                assert input_pc_format in ["ply", "obj", "stl"]
+                # ply, obj
+                if input_pc_format in ["ply", "obj"]:
+                    # 获取文件名
+                    stem = Path(file_path).stem
+                    # 输出文件夹不存在则创建
+                    pathlib.Path(self.opts.output_dir).mkdir(parents=True, exist_ok=True)
+                    # 以原格式输出
+                    output_file = self.opts.output_dir + stem + '.' + input_pc_format
+                    mesh = o3d.io.read_triangle_mesh(file_path)
+                    if mesh_filters == "taubin":
+                        taubin_mesh = o3d.geometry.TriangleMesh.filter_smooth_taubin(mesh, number_of_iterations=1, mu=-0.53)
+                        o3d.io.write_triangle_mesh(output_file, taubin_mesh)
+                        print("Done! result is saved in: ", output_file)
+                    elif mesh_filters == "laplacian":
+                        lap_mesh = o3d.geometry.TriangleMesh.filter_smooth_laplacian(mesh, number_of_iterations=1)
+                        o3d.io.write_triangle_mesh(output_file, lap_mesh)
+                        print("Done! result is saved in: ", output_file)
+                    elif mesh_filters == "neighbour":
+                        neighbor_mesh = o3d.geometry.TriangleMesh.filter_smooth_simple(mesh, number_of_iterations=1)
+                        o3d.io.write_triangle_mesh(output_file, neighbor_mesh)
+                        print("Done! result is saved in: ", output_file)
+                    else:
+                        raise Exception("Unsupported mesh filter!")
+                # stl
+                elif input_pc_format == "stl":
+                    # 获取文件名
+                    stem = Path(file_path).stem
+                    # 输出文件夹不存在则创建
+                    pathlib.Path(self.opts.output_dir).mkdir(parents=True, exist_ok=True)
+                    # 以原格式输出
+                    output_file = self.opts.output_dir + stem + '.' + input_pc_format
+                    mesh = o3d.io.read_triangle_mesh(file_path)
+                    if mesh_filters == "taubin":
+                        taubin_mesh = o3d.geometry.TriangleMesh.filter_smooth_taubin(mesh, number_of_iterations=1, mu=-0.53)
+                        taubin_mesh.compute_vertex_normals()  # compute normals
+                        o3d.io.write_triangle_mesh(output_file, taubin_mesh)
+                        print("Done! result is saved in: ", output_file)
+                    elif mesh_filters == "laplacian":
+                        lap_mesh = o3d.geometry.TriangleMesh.filter_smooth_laplacian(mesh, number_of_iterations=1)
+                        lap_mesh.compute_vertex_normals()   # compute normals
+                        o3d.io.write_triangle_mesh(output_file, lap_mesh)
+                        print("Done! result is saved in: ", output_file)
+                    elif mesh_filters == "neighbour":
+                        neighbor_mesh = o3d.geometry.TriangleMesh.filter_smooth_simple(mesh, number_of_iterations=1)
+                        neighbor_mesh.compute_vertex_normals()  # compute normals
+                        o3d.io.write_triangle_mesh(output_file, neighbor_mesh)
+                        print("Done! result is saved in: ", output_file)
+                    else:
+                        raise Exception("Unsupported mesh filter!")
+                else:
+                    raise Exception("Unsupported input file format. Choices=[ply, obj, stl]")
 
     def pc_sample(self):
         """
@@ -1007,4 +1059,23 @@ if __name__ == "__main__":
         elif FLAGS.mode == 3:
             # 滤波
             formatFactory.filter()
+    elif platform.system() == "Linux":
+        fl = get_all_files(FLAGS.input_dir, FLAGS.input_format)
+        # print(fl)
+        formatFactory = PointCloud_FormatFactory(FLAGS, fl)
+        if FLAGS.mode == 0:
+            # 点云格式转换
+            formatFactory.pc_pc()
+        elif FLAGS.mode == 1:
+            # mesh格式转换
+            formatFactory.mesh_mesh()
+        elif FLAGS.mode == 2:
+            # mesh转点云
+            formatFactory.mesh_to_pc()
+        elif FLAGS.mode == 3:
+            # 滤波
+            formatFactory.filter()
+    else:
+        raise Exception("Unsupported Operating System!")
+
 

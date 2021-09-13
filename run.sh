@@ -128,3 +128,12 @@ python pc_factory.py --mode 3 --type pc --filter remove_outlier --removal condit
 python pc_factory.py --mode 3 --type pc --filter statistical_removal --std_dev 1.0 --input_dir ../data/test --output_dir ../result/filter/statistical_removal/ --input_format pcd
 
 # 网格滤波
+# Supported format: [ply, obj, stl]
+# taubin filter
+python pc_factory.py --mode 3 --type mesh --mesh_filter taubin --input_dir ../data/test --output_dir ../result/filter/taubin/ --input_format ply
+# Laplacian smooth filter
+python pc_factory.py --mode 3 --type mesh --mesh_filter laplacian --input_dir ../data/test --output_dir ../result/filter/laplacian/ --input_format ply
+# simple neighbour average
+python pc_factory.py --mode 3 --type mesh --mesh_filter neighbour --input_dir ../data/test --output_dir ../result/filter/simple/ --input_format ply
+
+

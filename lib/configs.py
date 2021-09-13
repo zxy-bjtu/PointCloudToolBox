@@ -40,4 +40,7 @@ parser.add_argument('--radius', type=float, default=1.0, help='search radius for
 parser.add_argument('--min_neighbor', type=int, default=2, help='min neighbors in radius for RadiusOutlier')
 parser.add_argument('--std_dev', type=int, default=1.0, help='std dev used in Statistical Outlier Removal filter')
 
+# 网格滤波器
+parser.add_argument('--mesh_filter', type=str, default='taubin', help="[taubin, laplacian, neighbour]")
+
 FLAGS = parser.parse_args()
