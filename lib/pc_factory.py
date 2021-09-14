@@ -14,6 +14,7 @@ from pathlib import Path
 import pathlib
 import numpy as np
 import pcl
+import torch
 import vtk
 from plyfile import PlyData
 from openmesh import *
@@ -25,6 +26,7 @@ from configs import FLAGS
 from pc_io import get_all_files
 from read_las import read_las
 from filter import passThroughFilter, voxelGrid, project_inliers, remove_outlier, StatisticalOutlierRemovalFilter
+from fps import farthest_point_sample, index_points
 
 
 class PointCloud_FormatFactory(object):
@@ -1028,11 +1030,210 @@ class PointCloud_FormatFactory(object):
                 else:
                     raise Exception("Unsupported input file format. Choices=[ply, obj, stl]")
 
-    def pc_sample(self):
+    def pc_downsample(self):
         """
-        点云采样（下采样+上采样）
+        点云下采样
         :return:
         """
+        for i in range(self.filenum):
+            print("Processing: ", self.filelist[i])
+            file_path = self.filelist[i]  # 要处理的文件
+            input_pc_format = self.opts.input_format
+            down_sampler = self.opts.down_sampler
+            point_num = self.opts.point_num
+            # 获取文件名
+            stem = Path(file_path).stem
+            # 输出文件夹不存在则创建
+            pathlib.Path(self.opts.output_dir).mkdir(parents=True, exist_ok=True)
+            # 下采样后以原格式输出
+            output_file = self.opts.output_dir + stem + '.' + input_pc_format
+            # xyz, pcd, ply
+            if input_pc_format in ["xyz", "pcd", "ply"]:
+                pc = o3d.io.read_point_cloud(file_path)
+                xyz = np.asarray(pc.points, dtype=np.float32)
+                # farthest point sampling used in PointNet++
+                if down_sampler == "fps":
+                    if point_num > xyz.shape[0]:
+                        raise Exception("The point num cannot be greater than the actual number of points.")
+                    else:
+                        xyz = xyz[np.newaxis, :, :]
+                        xyz = torch.from_numpy(xyz)
+                        centroids = farthest_point_sample(xyz, point_num)
+                        new_points = index_points(xyz, centroids)
+                        ds_points = new_points.numpy()[0]
+                        pcd = o3d.geometry.PointCloud()
+                        pcd.points = o3d.utility.Vector3dVector(ds_points)
+                        o3d.io.write_point_cloud(output_file, pcd)
+                        print("Done! result is saved in: ", output_file)
+                elif down_sampler == "random":
+                    if point_num > xyz.shape[0]:
+                        raise Exception("The point num cannot be greater than the actual number of points.")
+                    else:
+                        sampling_ratio = point_num * 1.0 / xyz.shape[0]
+                        pc = o3d.geometry.PointCloud.random_down_sample(pc, sampling_ratio)
+                        o3d.io.write_point_cloud(output_file, pc)
+                        print("Done! result is saved in: ", output_file)
+                elif down_sampler == "uniform":
+                    k = self.opts.k
+                    pc = o3d.geometry.PointCloud.uniform_down_sample(pc, k)
+                    o3d.io.write_point_cloud(output_file, pc)
+                    print("Done! result is saved in: ", output_file)
+                elif down_sampler == "voxel":
+                    voxel_size = self.opts.voxel_size
+                    pc = o3d.geometry.PointCloud.voxel_down_sample(pc, voxel_size)
+                    o3d.io.write_point_cloud(output_file, pc)
+                    print("Done! result is saved in: ", output_file)
+                else:
+                    raise Exception("Unsupported down sampler. Choices=[fps, random, uniform, voxel]")
+
+            # txt
+            elif input_pc_format == "txt":
+                pc = np.loadtxt(file_path, delimiter=' ')[:, :3]
+                xyz = pc[np.newaxis, :, :]
+                # farthest point sampling used in PointNet++
+                if down_sampler == "fps":
+                    if point_num > pc.shape[0]:
+                        raise Exception("The point num cannot be greater than the actual number of points.")
+                    else:
+                        xyz = torch.from_numpy(xyz)
+                        centroids = farthest_point_sample(xyz, point_num)
+                        new_points = index_points(xyz, centroids)
+                        ds_points = new_points.numpy()[0]
+                        np.savetxt(output_file, ds_points)
+                        print("Done! result is saved in: ", output_file)
+                elif down_sampler == "random":
+                    if point_num > pc.shape[0]:
+                        raise Exception("The point num cannot be greater than the actual number of points.")
+                    else:
+                        sampling_ratio = point_num * 1.0 / pc.shape[0]
+                        pcd = o3d.geometry.PointCloud()
+                        pcd.points = o3d.utility.Vector3dVector(pc)
+                        pc = o3d.geometry.PointCloud.random_down_sample(pcd, sampling_ratio)
+                        ds_points = np.asarray(pc.points, dtype=np.float32)
+                        np.savetxt(output_file, ds_points)
+                        print("Done! result is saved in: ", output_file)
+                elif down_sampler == "uniform":
+                    k = self.opts.k
+                    pcd = o3d.geometry.PointCloud()
+                    pcd.points = o3d.utility.Vector3dVector(pc)
+                    pc = o3d.geometry.PointCloud.uniform_down_sample(pcd, k)
+                    ds_points = np.asarray(pc.points, dtype=np.float32)
+                    np.savetxt(output_file, ds_points)
+                    print("Done! result is saved in: ", output_file)
+                elif down_sampler == "voxel":
+                    voxel_size = self.opts.voxel_size
+                    pcd = o3d.geometry.PointCloud()
+                    pcd.points = o3d.utility.Vector3dVector(pc)
+                    pc = o3d.geometry.PointCloud.voxel_down_sample(pcd, voxel_size)
+                    ds_points = np.asarray(pc.points, dtype=np.float32)
+                    np.savetxt(output_file, ds_points)
+                    print("Done! result is saved in: ", output_file)
+                else:
+                    raise Exception("Unsupported down sampler. Choices=[fps, random, uniform, voxel]")
+
+            # pts
+            elif input_pc_format == "pts":
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    lines = f.readlines()
+                    first_line = lines[0].split(' ')
+                    try:
+                        assert len(first_line) == 1
+                        # header
+                        # 获取文件名
+                        stem = Path(file_path).stem
+                        # 输出文件夹不存在则创建
+                        pathlib.Path(self.opts.output_dir).mkdir(parents=True, exist_ok=True)
+                        # 以原格式输出
+                        output_file = self.opts.output_dir + stem + '.' + input_pc_format
+                        pc = o3d.io.read_point_cloud(file_path)
+                        xyz = np.asarray(pc.points, dtype=np.float32)
+                        # farthest point sampling used in PointNet++
+                        if down_sampler == "fps":
+                            if point_num > xyz.shape[0]:
+                                raise Exception("The point num cannot be greater than the actual number of points.")
+                            else:
+                                xyz = xyz[np.newaxis, :, :]
+                                xyz = torch.from_numpy(xyz)
+                                centroids = farthest_point_sample(xyz, point_num)
+                                new_points = index_points(xyz, centroids)
+                                ds_points = new_points.numpy()[0]
+                                pcd = o3d.geometry.PointCloud()
+                                pcd.points = o3d.utility.Vector3dVector(ds_points)
+                                o3d.io.write_point_cloud(output_file, pcd)
+                                print("Done! result is saved in: ", output_file)
+                        elif down_sampler == "random":
+                            if point_num > xyz.shape[0]:
+                                raise Exception("The point num cannot be greater than the actual number of points.")
+                            else:
+                                sampling_ratio = point_num * 1.0 / xyz.shape[0]
+                                pc = o3d.geometry.PointCloud.random_down_sample(pc, sampling_ratio)
+                                o3d.io.write_point_cloud(output_file, pc)
+                                print("Done! result is saved in: ", output_file)
+                        elif down_sampler == "uniform":
+                            k = self.opts.k
+                            pc = o3d.geometry.PointCloud.uniform_down_sample(pc, k)
+                            o3d.io.write_point_cloud(output_file, pc)
+                            print("Done! result is saved in: ", output_file)
+                        elif down_sampler == "voxel":
+                            voxel_size = self.opts.voxel_size
+                            pc = o3d.geometry.PointCloud.voxel_down_sample(pc, voxel_size)
+                            o3d.io.write_point_cloud(output_file, pc)
+                            print("Done! result is saved in: ", output_file)
+                        else:
+                            raise Exception("Unsupported down sampler. Choices=[fps, random, uniform, voxel]")
+
+                    except:
+                        # no header
+                        pc = np.loadtxt(file_path, delimiter=' ', dtype=np.float32)
+                        # 获取文件名
+                        stem = Path(file_path).stem
+                        # 输出文件夹不存在则创建
+                        pathlib.Path(self.opts.output_dir).mkdir(parents=True, exist_ok=True)
+                        # 以原格式输出
+                        output_file = self.opts.output_dir + stem + '.' + input_pc_format
+                        xyz = pc[np.newaxis, :, :]
+                        # farthest point sampling used in PointNet++
+                        if down_sampler == "fps":
+                            if point_num > pc.shape[0]:
+                                raise Exception("The point num cannot be greater than the actual number of points.")
+                            else:
+                                xyz = torch.from_numpy(xyz)
+                                centroids = farthest_point_sample(xyz, point_num)
+                                new_points = index_points(xyz, centroids)
+                                ds_points = new_points.numpy()[0]
+                                pcd = o3d.geometry.PointCloud()
+                                pcd.points = o3d.utility.Vector3dVector(ds_points)
+                                o3d.io.write_point_cloud(output_file, pcd)
+                                print("Done! result is saved in: ", output_file)
+                        elif down_sampler == "random":
+                            if point_num > pc.shape[0]:
+                                raise Exception("The point num cannot be greater than the actual number of points.")
+                            else:
+                                sampling_ratio = point_num * 1.0 / pc.shape[0]
+                                pcd = o3d.geometry.PointCloud()
+                                pcd.points = o3d.utility.Vector3dVector(pc)
+                                pc = o3d.geometry.PointCloud.random_down_sample(pcd, sampling_ratio)
+                                o3d.io.write_point_cloud(output_file, pc)
+                                print("Done! result is saved in: ", output_file)
+                        elif down_sampler == "uniform":
+                            k = self.opts.k
+                            pcd = o3d.geometry.PointCloud()
+                            pcd.points = o3d.utility.Vector3dVector(pc)
+                            pc = o3d.geometry.PointCloud.uniform_down_sample(pcd, k)
+                            o3d.io.write_point_cloud(output_file, pc)
+                            print("Done! result is saved in: ", output_file)
+                        elif down_sampler == "voxel":
+                            voxel_size = self.opts.voxel_size
+                            pcd = o3d.geometry.PointCloud()
+                            pcd.points = o3d.utility.Vector3dVector(pc)
+                            pc = o3d.geometry.PointCloud.voxel_down_sample(pcd, voxel_size)
+                            o3d.io.write_point_cloud(output_file, pc)
+                            print("Done! result is saved in: ", output_file)
+                        else:
+                            raise Exception("Unsupported down sampler. Choices=[fps, random, uniform, voxel]")
+
+            else:
+                raise Exception("Unsupported input format! Choices=[ply, xyz, pts, pcd, txt]")
 
     def pc_voxel(self):
         """
@@ -1059,6 +1260,10 @@ if __name__ == "__main__":
         elif FLAGS.mode == 3:
             # 滤波
             formatFactory.filter()
+        elif FLAGS.mode == 4:
+            # 点云下采样
+            formatFactory.pc_downsample()
+
     elif platform.system() == "Linux":
         fl = get_all_files(FLAGS.input_dir, FLAGS.input_format)
         # print(fl)
@@ -1075,6 +1280,10 @@ if __name__ == "__main__":
         elif FLAGS.mode == 3:
             # 滤波
             formatFactory.filter()
+        elif FLAGS.mode == 4:
+            # 点云下采样
+            formatFactory.pc_downsample()
+
     else:
         raise Exception("Unsupported Operating System!")
 

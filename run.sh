@@ -136,4 +136,14 @@ python pc_factory.py --mode 3 --type mesh --mesh_filter laplacian --input_dir ..
 # simple neighbour average
 python pc_factory.py --mode 3 --type mesh --mesh_filter neighbour --input_dir ../data/test --output_dir ../result/filter/simple/ --input_format ply
 
+# 点云下采样
+# Supported format: [ply, xyz, pts, pcd, txt]
+# FPS(recommended)
+python pc_factory.py --mode 4 --down_sampler fps --point_num 2048 --input_dir ../data/test --output_dir ../result/downsample/fps/ --input_format ply
+# random down sampling
+python pc_factory.py --mode 4 --down_sampler random --point_num 2048 --input_dir ../data/test --output_dir ../result/downsample/random/ --input_format ply
+# uniform down sampling
+python pc_factory.py --mode 4 --down_sampler uniform --k 4 --input_dir ../data/test --output_dir ../result/downsample/uniform/ --input_format ply
+# voxel down sampling
+python pc_factory.py --mode 4 --down_sampler voxel --voxel_size 0.5 --input_dir ../data/test --output_dir ../result/downsample/voxel/ --input_format ply
 

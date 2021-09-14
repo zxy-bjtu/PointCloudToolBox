@@ -5,7 +5,9 @@ parser.add_argument('--mode', type=int, default=0,
                     help='Point cloud data processing mode, you can set: ' \
                          '0: Format conversion between point clouds and point cloud' \
                          '1: Format conversion between 3d mesh and 3d mesh' \
-                         '2: Convert mesh to point cloud'
+                         '2: Convert mesh to point cloud' \
+                         '3: point cloud and mesh filtering' \
+                         '4: point cloud down sampling'
                     )
 
 # point cloud IO
@@ -42,5 +44,10 @@ parser.add_argument('--std_dev', type=int, default=1.0, help='std dev used in St
 
 # 网格滤波器
 parser.add_argument('--mesh_filter', type=str, default='taubin', help="[taubin, laplacian, neighbour]")
+
+# 点云下采样
+parser.add_argument('--down_sampler', type=str, default='fps', help="[fps, random, uniform, voxel]")
+# uniform sampling
+parser.add_argument('--k', type=int, default=4, help="every_k_points (int): Sample rate")
 
 FLAGS = parser.parse_args()

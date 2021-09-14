@@ -30,7 +30,11 @@ How to install the environment:
      - [x] txt -> pcd | ply | xyz | pts
 - [x] Calculate the surface area and volume of 3D Mesh
 - [ ] Point cloud voxelization
-- [ ] downsampling
+- [x] downsampling
+    - [x] farthest point sampling(FPS)
+    - [x] random sampling
+    - [x] uniform sampling
+    - [x] voxel sampling
 - [ ] upsampling
 - [x] filtering
     - [x] PassThrough Filter
