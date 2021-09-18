@@ -8,6 +8,7 @@ This point cloud processing tool library can be used to process point clouds, 3d
 python 3.7.5
 
 Dependent packages:
+- torch==1.7.1+cu101
 - openmesh==1.1.6
 - open3d==0.13.0
 - plyfile==0.7.4

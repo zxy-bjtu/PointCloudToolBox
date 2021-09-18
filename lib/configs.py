@@ -6,8 +6,9 @@ parser.add_argument('--mode', type=int, default=0,
                          '0: Format conversion between point clouds and point cloud' \
                          '1: Format conversion between 3d mesh and 3d mesh' \
                          '2: Convert mesh to point cloud' \
-                         '3: point cloud and mesh filtering' \
-                         '4: point cloud down sampling'
+                         '3: point cloud filtering' \
+                         '4: 3d mesh filtering' \
+                         '5: point cloud down sampling'
                     )
 
 # point cloud IO
@@ -28,8 +29,6 @@ parser.add_argument('--factor', type=int, default=5, help="Factor for the initia
                                                           "This init PointCloud is used for sample elimination")
 
 # pointcloud/mesh filter
-# point cloud filter
-parser.add_argument('--type', type=str, default='pc', help="the file type, [pc, mesh] ")
 # 点云滤波器
 parser.add_argument('--filter', type=str, default='PassThroughFilter',
                     help="[PassThroughFilter, VoxelGridFilter, project_inliers, remove_outliers, "
@@ -40,7 +39,7 @@ parser.add_argument('--removal', '-r', choices=('radius', 'condition'), default=
                     help='RadiusOutlier/Condition Removal')
 parser.add_argument('--radius', type=float, default=1.0, help='search radius for RadiusOutlier')
 parser.add_argument('--min_neighbor', type=int, default=2, help='min neighbors in radius for RadiusOutlier')
-parser.add_argument('--std_dev', type=int, default=1.0, help='std dev used in Statistical Outlier Removal filter')
+parser.add_argument('--std_dev', type=float, default=1.0, help='std dev used in Statistical Outlier Removal filter')
 
 # 网格滤波器
 parser.add_argument('--mesh_filter', type=str, default='taubin', help="[taubin, laplacian, neighbour]")
