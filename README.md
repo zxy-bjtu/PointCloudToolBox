@@ -29,7 +29,6 @@ How to install the environment:
      - [x] xyz -> pcd | pts | ply | txt | csv
      - [x] pts -> pcd | xyz | ply | txt | csv
      - [x] txt -> pcd | ply | xyz | pts
-- [x] Calculate the surface area and volume of 3D Mesh
 - [ ] Point cloud voxelization
 - [x] downsampling
     - [x] farthest point sampling(FPS)
@@ -59,8 +58,11 @@ How to install the environment:
     - [x] Taubin filter
     - [x] Laplacian smooth
     - [x] simple neighbour average
+- [x] Calculate the surface area and volume of 3D Mesh
 - [ ] mesh voxelization
-- [ ] mesh subdivision
+- [x] mesh subdivision
+    - [x] loop
+    - [x] midpoint
 - [ ] 3d mesh visualization
 
 ### voxel

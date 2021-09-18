@@ -319,6 +319,62 @@ class Mesh_FormatFactory(object):
             else:
                 raise Exception("Unsupported input file format. Choices=[ply, obj, stl]")
 
+    def subdivision(self):
+        """
+        3d mesh subdivision: divide each triangle into a number of smaller triangles
+        :return:
+        """
+        for i in range(self.filenum):
+            print("Processing: ", self.filelist[i])
+            file_path = self.filelist[i]  # 要处理的文件
+            input_pc_format = self.opts.input_format
+            subdivision_type = self.opts.subdivision_type
+            num_of_iteration = self.opts.iteration
+            # 检查输入输出文件格式是否合法
+            assert input_pc_format in ["ply", "obj", "stl"]
+            # ply, obj
+            if input_pc_format in ["ply", "obj"]:
+                # 获取文件名
+                stem = Path(file_path).stem
+                # 输出文件夹不存在则创建
+                pathlib.Path(self.opts.output_dir).mkdir(parents=True, exist_ok=True)
+                # 以原格式输出
+                output_file = self.opts.output_dir + stem + '.' + input_pc_format
+                mesh = o3d.io.read_triangle_mesh(file_path)
+                if subdivision_type == "loop":
+                    loop_mesh = mesh.subdivide_loop(number_of_iterations=num_of_iteration)
+                    o3d.io.write_triangle_mesh(output_file, loop_mesh)
+                    print("Done! result is saved in: ", output_file)
+                elif subdivision_type == "midpoint":
+                    midpoint_mesh = mesh.subdivide_midpoint(number_of_iterations=num_of_iteration)
+                    o3d.io.write_triangle_mesh(output_file, midpoint_mesh)
+                    print("Done! result is saved in: ", output_file)
+                else:
+                    raise Exception("Unsupported mesh subdivision type!")
+            # stl
+            elif input_pc_format == "stl":
+                # 获取文件名
+                stem = Path(file_path).stem
+                # 输出文件夹不存在则创建
+                pathlib.Path(self.opts.output_dir).mkdir(parents=True, exist_ok=True)
+                # 以原格式输出
+                output_file = self.opts.output_dir + stem + '.' + input_pc_format
+                mesh = o3d.io.read_triangle_mesh(file_path)
+                if subdivision_type == "loop":
+                    loop_mesh = mesh.subdivide_loop(number_of_iterations=num_of_iteration)
+                    loop_mesh.compute_vertex_normals()  # compute normals
+                    o3d.io.write_triangle_mesh(output_file, loop_mesh)
+                    print("Done! result is saved in: ", output_file)
+                elif subdivision_type == "midpoint":
+                    midpoint_mesh = mesh.subdivide_midpoint(number_of_iterations=num_of_iteration)
+                    midpoint_mesh.compute_vertex_normals()  # compute normals
+                    o3d.io.write_triangle_mesh(output_file, midpoint_mesh)
+                    print("Done! result is saved in: ", output_file)
+                else:
+                    raise Exception("Unsupported mesh subdivision type!")
+            else:
+                raise Exception("Unsupported input file format. Choices=[ply, obj, stl]")
+
 
 if __name__ == "__main__":
     # 获取文件列表
@@ -335,6 +391,9 @@ if __name__ == "__main__":
         elif FLAGS.mode == 4:
             # mesh滤波
             formatFactory.filter()
+        elif FLAGS.mode == 6:
+            # mesh精细化
+            formatFactory.subdivision()
 
     elif platform.system() == "Linux":
         fl = get_all_files(FLAGS.input_dir, FLAGS.input_format)
@@ -349,6 +408,9 @@ if __name__ == "__main__":
         elif FLAGS.mode == 4:
             # mesh滤波
             formatFactory.filter()
+        elif FLAGS.mode == 6:
+            # mesh精细化
+            formatFactory.subdivision()
     else:
         raise Exception("Unsupported Operating System!")
 

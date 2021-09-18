@@ -8,7 +8,8 @@ parser.add_argument('--mode', type=int, default=0,
                          '2: Convert mesh to point cloud' \
                          '3: point cloud filtering' \
                          '4: 3d mesh filtering' \
-                         '5: point cloud down sampling'
+                         '5: point cloud down sampling' \
+                         '6: 3d mesh subdivision'
                     )
 
 # point cloud IO
@@ -48,5 +49,10 @@ parser.add_argument('--mesh_filter', type=str, default='taubin', help="[taubin, 
 parser.add_argument('--down_sampler', type=str, default='fps', help="[fps, random, uniform, voxel]")
 # uniform sampling
 parser.add_argument('--k', type=int, default=4, help="every_k_points (int): Sample rate")
+
+# mesh subdivision
+parser.add_argument('--subdivision_type', type=str, default='loop', help="[midpoint, loop]")
+parser.add_argument('--iteration', type=int, default=2, help="The parameter number_of_iterations defines how many "
+                                                             "times 3d mesh subdivision should be repeated.")
 
 FLAGS = parser.parse_args()

@@ -136,7 +136,7 @@ python mesh_factory.py --mode 4 --mesh_filter laplacian --input_dir ../data/test
 # simple neighbour average
 python mesh_factory.py --mode 4 --mesh_filter neighbour --input_dir ../data/test --output_dir ../result/filter/simple/ --input_format ply
 
-# 点云下采样
+# 6. 点云下采样
 # Supported format: [ply, xyz, pts, pcd, txt]
 # FPS(recommended)
 python pc_factory.py --mode 5 --down_sampler fps --point_num 2048 --input_dir ../data/test --output_dir ../result/downsample/fps/ --input_format ply
@@ -147,3 +147,7 @@ python pc_factory.py --mode 5 --down_sampler uniform --k 4 --input_dir ../data/t
 # voxel down sampling
 python pc_factory.py --mode 5 --down_sampler voxel --voxel_size 0.5 --input_dir ../data/test --output_dir ../result/downsample/voxel/ --input_format ply
 
+# 7. mesh subdivision
+# suitable iteration may be in [1,2,3,4]
+python mesh_factory.py --mode 6 --subdivision_type loop --iteration 1 --input_dir ../data/test --output_dir ../result/subdivision/loop/ --input_format ply
+python mesh_factory.py --mode 6 --subdivision_type midpoint --iteration 1 --input_dir ../data/test --output_dir ../result/subdivision/midpoint/ --input_format ply
