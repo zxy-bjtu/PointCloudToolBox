@@ -72,7 +72,9 @@ How to install the environment:
     - [x] dxf -> binvox | hips | mira | vtk | msh
     - [x] ply -> binvox | hips | mira | vtk | msh
     - [x] stl -> binvox | hips | mira | vtk | msh
-- [ ] visualization
+- [x] voxel visualization
+    - [x] binvox
+    - [x] mira
 
 ## Use
 You can find command in `run.sh`.
