@@ -151,3 +151,26 @@ python pc_factory.py --mode 5 --down_sampler voxel --voxel_size 0.5 --input_dir 
 # suitable iteration may be in [1,2,3,4]
 python mesh_factory.py --mode 6 --subdivision_type loop --iteration 1 --input_dir ../data/test --output_dir ../result/subdivision/loop/ --input_format ply
 python mesh_factory.py --mode 6 --subdivision_type midpoint --iteration 1 --input_dir ../data/test --output_dir ../result/subdivision/midpoint/ --input_format ply
+
+# 8. Convert 3d mesh into voxel grid
+# supported input format: ["obj", "off", "dxf", "ply", "stl"]
+# supported output format: ["binvox", "hips", "mira", "vtk", "msh"]
+# binvox
+python voxel_factory.py --mode 7 --input_dir ../data/test --output_dir ../result/mesh_2_voxel/ply2binvox/ --input_format ply --output_format binvox --d 256
+# mira
+python voxel_factory.py --mode 7 --input_dir ../data/test --output_dir ../result/mesh_2_voxel/ply2mira/ --input_format ply --output_format mira --d 256
+# vtk
+python voxel_factory.py --mode 7 --input_dir ../data/test --output_dir ../result/mesh_2_voxel/ply2vtk/ --input_format ply --output_format vtk --d 256
+# msh
+python voxel_factory.py --mode 7 --input_dir ../data/test --output_dir ../result/mesh_2_voxel/ply2msh/ --input_format ply --output_format msh --d 256
+# hips
+python voxel_factory.py --mode 7 --input_dir ../data/test --output_dir ../result/mesh_2_voxel/ply2hips/ --input_format ply --output_format hips --d 256
+
+# 9. voxel grid visualization
+# supported input format: ["binvox", "mira"]
+python voxel_factory.py --mode 8 --input_dir ../result/mesh_2_voxel/ply2binvox --input_format binvox --input_file ../result/mesh_2_voxel/ply2binvox/14.binvox
+python voxel_factory.py --mode 8 --input_dir ../result/mesh_2_voxel/ply2mira --input_format mira --input_file ../result/mesh_2_voxel/ply2mira/14.mira
+
+
+
+

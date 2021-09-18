@@ -1,8 +1,6 @@
 """
-This script is used for point cloud and 3D mesh format conversion.
+This script is used for point cloud processing.
 The common pc format: .pts, .las, .pcd, .xyz, .ply, .txt
-The common mesh format: .obj, .off, .ply, .stl
-The common voxel format: .vxl, .vox, .kvx, .kv6, .v3a, .v3b
 """
 import os
 import sys

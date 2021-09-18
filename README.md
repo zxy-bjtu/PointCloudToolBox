@@ -66,6 +66,12 @@ How to install the environment:
 - [ ] 3d mesh visualization
 
 ### voxel
+- [x] 3d mesh to voxel grid
+    - [x] obj -> binvox | hips | mira | vtk | msh
+    - [x] off -> binvox | hips | mira | vtk | msh
+    - [x] dxf -> binvox | hips | mira | vtk | msh
+    - [x] ply -> binvox | hips | mira | vtk | msh
+    - [x] stl -> binvox | hips | mira | vtk | msh
 - [ ] visualization
 
 ## Use

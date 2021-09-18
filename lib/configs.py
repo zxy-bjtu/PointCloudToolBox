@@ -9,7 +9,9 @@ parser.add_argument('--mode', type=int, default=0,
                          '3: point cloud filtering' \
                          '4: 3d mesh filtering' \
                          '5: point cloud down sampling' \
-                         '6: 3d mesh subdivision'
+                         '6: 3d mesh subdivision' \
+                         '7: Convert 3d mesh into a binary 3D voxel grid' \
+                         '8: voxel grid visualization'
                     )
 
 # point cloud IO
@@ -54,5 +56,11 @@ parser.add_argument('--k', type=int, default=4, help="every_k_points (int): Samp
 parser.add_argument('--subdivision_type', type=str, default='loop', help="[midpoint, loop]")
 parser.add_argument('--iteration', type=int, default=2, help="The parameter number_of_iterations defines how many "
                                                              "times 3d mesh subdivision should be repeated.")
+
+# convert mesh into voxel grid
+parser.add_argument('--d', type=int, default=256, help="specify voxel grid size, max:1024")
+
+# voxel grid visualization
+parser.add_argument('--input_file', type=str, help="the file you want to see.")
 
 FLAGS = parser.parse_args()
