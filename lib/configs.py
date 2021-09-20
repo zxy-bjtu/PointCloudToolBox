@@ -63,4 +63,8 @@ parser.add_argument('--d', type=int, default=256, help="specify voxel grid size,
 # voxel grid visualization
 parser.add_argument('--input_file', type=str, help="the file you want to see.")
 
+# point cloud registration
+parser.add_argument('--s_file', type=str, help="source point cloud file")
+parser.add_argument('--t_file', type=str, help="target point cloud file")
+
 FLAGS = parser.parse_args()

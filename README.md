@@ -8,16 +8,17 @@ This point cloud processing tool library can be used to process point clouds, 3d
 python 3.7.5
 
 Dependent packages:
-- torch==1.7.1+cu101
-- openmesh==1.1.6
-- open3d==0.13.0
-- plyfile==0.7.4
-- numpy==1.21.0
-- vtk==8.2.0
-- python-pcl==0.3.0rc1
+  - scipy==1.6.2
+  - torch==1.7.1+cu101
+  - openmesh==1.1.6
+  - open3d==0.13.0
+  - plyfile==0.7.4
+  - numpy==1.21.2
+  - vtk==8.2.0
+  - python-pcl==0.3.0rc1
 
 How to install the environment:
-# pip install requirements.txt
+$ pip install requirements.txt
 ```
 
 ## Todo
@@ -42,7 +43,9 @@ How to install the environment:
     - [x] project_inliers Filter
     - [x] remove_outliers Filter
     - [x] statistical_removal Filter
-- [ ] registration
+- [x] registration
+    - [x] ICP
+    - [x] RANSAC
 - [ ] 3D reconstruction
 - [ ] visualization
 

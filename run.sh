@@ -171,6 +171,10 @@ python voxel_factory.py --mode 7 --input_dir ../data/test --output_dir ../result
 python voxel_factory.py --mode 8 --input_dir ../result/mesh_2_voxel/ply2binvox --input_format binvox --input_file ../result/mesh_2_voxel/ply2binvox/14.binvox
 python voxel_factory.py --mode 8 --input_dir ../result/mesh_2_voxel/ply2mira --input_format mira --input_file ../result/mesh_2_voxel/ply2mira/14.mira
 
-
-
-
+# 10. point cloud registration
+# supported input format: [pcd,ply,xyz]
+cd ../common
+# ICP
+python iterative_closest_point.py --s_file ../data/registration/bun000.ply --t_file ../data/registration/bun045.ply
+# RANSAC
+python RANSAC.py --s_file ../data/registration/bun000.ply --t_file ../data/registration/bun045.ply
