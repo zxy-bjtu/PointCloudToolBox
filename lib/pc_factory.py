@@ -20,6 +20,7 @@ from pc_io import get_all_files
 from read_las import read_las
 from filter import passThroughFilter, voxelGrid, project_inliers, remove_outlier, StatisticalOutlierRemovalFilter
 from fps import farthest_point_sample, index_points
+from cluster_extraction import pc_segmentation
 
 
 class PointCloud_FormatFactory(object):

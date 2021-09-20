@@ -178,3 +178,5 @@ cd ../common
 python iterative_closest_point.py --s_file ../data/registration/bun000.ply --t_file ../data/registration/bun045.ply
 # RANSAC
 python RANSAC.py --s_file ../data/registration/bun000.ply --t_file ../data/registration/bun045.ply
+
+
