@@ -11,7 +11,8 @@ parser.add_argument('--mode', type=int, default=0,
                          '5: point cloud down sampling' \
                          '6: 3d mesh subdivision' \
                          '7: Convert 3d mesh into a binary 3D voxel grid' \
-                         '8: voxel grid visualization'
+                         '8: voxel grid visualization' \
+                         '9: point cloud upsampling with an arbitrary scale(4X, 5.25X, 7.5X, ...)'
                     )
 
 # point cloud IO
@@ -66,5 +67,9 @@ parser.add_argument('--input_file', type=str, help="the file you want to see.")
 # point cloud registration
 parser.add_argument('--s_file', type=str, help="source point cloud file")
 parser.add_argument('--t_file', type=str, help="target point cloud file")
+
+# point cloud upsampling
+parser.add_argument('--pu_model', type=str, help="the point cloud upsampling model, [Meta-PU]")
+parser.add_argument('--scale', type=float, default=4.0, help="the upsampling ratio")
 
 FLAGS = parser.parse_args()

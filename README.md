@@ -36,7 +36,8 @@ $ pip install requirements.txt
     - [x] random sampling
     - [x] uniform sampling
     - [x] voxel sampling
-- [ ] upsampling
+- [x] upsampling
+    - [x] Meta-PU [[published in TVCG2021](../PU/Meta-PU/README.md)]
 - [x] filtering
     - [x] PassThrough Filter
     - [x] VoxelGrid Filter

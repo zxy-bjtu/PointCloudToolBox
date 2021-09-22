@@ -20,7 +20,7 @@ from pc_io import get_all_files
 from read_las import read_las
 from filter import passThroughFilter, voxelGrid, project_inliers, remove_outlier, StatisticalOutlierRemovalFilter
 from fps import farthest_point_sample, index_points
-from cluster_extraction import pc_segmentation
+from mls import MovingLeastSquares
 
 
 class PointCloud_FormatFactory(object):
@@ -949,6 +949,36 @@ class PointCloud_FormatFactory(object):
             else:
                 raise Exception("Unsupported input format! Choices=[ply, xyz, pts, pcd, txt]")
 
+    def pc_upsampling(self):
+        """
+        点云上采样
+        支持的上采样模型：
+        1. Meta-PU
+            支持的采样率：任意的浮点数，如：5.5
+            支持的运行系统：Linux
+            支持的点云格式：仅xyz
+        :return:
+        """
+        for i in range(self.filenum):
+            print("Processing: ", self.filelist[i])
+            file_path = self.filelist[i]  # 要处理的文件
+            input_pc_format = self.opts.input_format
+            pu_model = self.opts.pu_model
+            scale_R = self.opts.scale
+            if pu_model == "Meta-PU":
+                # 检查系统
+                assert platform.system() == "Linux"
+                # 检查输入输出文件格式是否合法
+                assert input_pc_format in ["xyz"]
+                os.system('cd ../PU/Meta-PU')
+                # model/data/all_testset/4/input : the path of the point cloud to be sampled
+                # result is saved in /model/new/result/${R}input/
+                os.system('python main_gan.py --phase test --dataset model/data/all_testset/4/input --log_dir '
+                          'model/new --batch_size 4 --model model_res_mesh_pool --model_path 60 --gpu 0 '
+                          '--test_scale ' + str(scale_R))
+            else:
+                raise Exception("unsupported PU model.")
+
     def pc_voxel(self):
         """
         点云体素化
@@ -985,6 +1015,9 @@ if __name__ == "__main__":
         elif FLAGS.mode == 5:
             # 点云下采样
             formatFactory.pc_downsample()
+        elif FLAGS.mode == 9:
+            # 点云上采样
+            formatFactory.pc_upsampling()
 
     else:
         raise Exception("Unsupported Operating System!")

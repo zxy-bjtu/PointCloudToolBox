@@ -1,0 +1,11 @@
+git+https://github.com/peter0749/etw_pytorch_utils.git#egg=etw_pytorch_utils
+h5py==2.9.0
+numpy==1.16.4
+torch==1.4.0+cu100
+torchvision==0.5.0+cu100
+enum34==1.1.10
+future==0.17.1
+pykeops==1.5
+geomloss==0.2.4
+pyemd==0.5.1
+warmup-scheduler==0.3

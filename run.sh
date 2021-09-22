@@ -179,4 +179,12 @@ python iterative_closest_point.py --s_file ../data/registration/bun000.ply --t_f
 # RANSAC
 python RANSAC.py --s_file ../data/registration/bun000.ply --t_file ../data/registration/bun045.ply
 
+# 11. point cloud upsampling
+# Meta-PU
+# supported system: Linux
+# supported pc format: .xyz
+python pc_factory.py --mode 9 --input_dir ../PU/Meta-PU/model/data/all_testset/4/input --input_format xyz --pu_model Meta-PU --scale 5.5
+
+
+
 
