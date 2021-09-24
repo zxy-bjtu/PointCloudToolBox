@@ -185,6 +185,8 @@ python RANSAC.py --s_file ../data/registration/bun000.ply --t_file ../data/regis
 # supported pc format: .xyz
 python pc_factory.py --mode 9 --input_dir ../PU/Meta-PU/model/data/all_testset/4/input --input_format xyz --pu_model Meta-PU --scale 5.5
 
-
+# 12. Convert 3d point cloud into voxel grid
+# supported pc format: [pcd, ply, xyz, pts, txt]
+python pc_factory.py --mode 10 --input_dir ../data/test --output_dir ../result/pc_voxel_grid/ --input_format pcd --output_format binvox --voxel 64
 
 

@@ -226,11 +226,15 @@ def write(voxel_model, fp):
     else:
         dense_voxel_data = voxel_model.data
 
-    fp.write('#binvox 1\n')
-    fp.write('dim '+' '.join(map(str, voxel_model.dims))+'\n')
-    fp.write('translate '+' '.join(map(str, voxel_model.translate))+'\n')
-    fp.write('scale '+str(voxel_model.scale)+'\n')
-    fp.write('data\n')
+    fp.write('#binvox 1\n'.encode('ascii'))
+    line = 'dim '+' '.join(map(str, voxel_model.dims))+'\n'
+    fp.write(line.encode('ascii'))
+    line = 'translate ' + ' '.join(map(str, voxel_model.translate)) + '\n'
+    fp.write(line.encode('ascii'))
+    line = 'scale ' + str(voxel_model.scale) + '\n'
+    fp.write(line.encode('ascii'))
+    fp.write('data\n'.encode('ascii'))
+
     if not voxel_model.axis_order in ('xzy', 'xyz'):
         raise ValueError('Unsupported voxel model axis order')
 
@@ -247,19 +251,19 @@ def write(voxel_model, fp):
             ctr += 1
             # if ctr hits max, dump
             if ctr==255:
-                fp.write(chr(state))
-                fp.write(chr(ctr))
+                fp.write(state.tobytes())
+                fp.write(ctr.to_bytes(1, byteorder='little'))
                 ctr = 0
         else:
             # if switch state, dump
-            fp.write(chr(state))
-            fp.write(chr(ctr))
+            fp.write(state.tobytes())
+            fp.write(ctr.to_bytes(1, byteorder='little'))
             state = c
             ctr = 1
     # flush out remainders
     if ctr > 0:
-        fp.write(chr(state))
-        fp.write(chr(ctr))
+        fp.write(state.tobytes())
+        fp.write(ctr.to_bytes(1, byteorder='little'))
 
 
 if __name__ == '__main__':

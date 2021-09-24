@@ -15,12 +15,14 @@ import torch
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(BASE_DIR)
 sys.path.append(os.path.join(BASE_DIR, '../common'))
+sys.path.append(os.path.join(BASE_DIR, '../vox/linux'))
+sys.path.append(os.path.join(BASE_DIR, '../vox/windows'))
 from configs import FLAGS
 from pc_io import get_all_files
 from read_las import read_las
 from filter import passThroughFilter, voxelGrid, project_inliers, remove_outlier, StatisticalOutlierRemovalFilter
 from fps import farthest_point_sample, index_points
-from mls import MovingLeastSquares
+from PointCloud2Voxel import pointcloud2voxel
 
 
 class PointCloud_FormatFactory(object):
@@ -984,6 +986,20 @@ class PointCloud_FormatFactory(object):
         点云体素化
         :return:
         """
+        for i in range(self.filenum):
+            print("Processing: ", self.filelist[i])
+            file_path = self.filelist[i]  # 要处理的文件
+            input_pc_format = self.opts.input_format
+            output_voxel_format = self.opts.output_format
+            voxel_size = self.opts.voxel
+            # 获取文件名
+            stem = Path(file_path).stem
+            # 输出文件夹不存在则创建
+            pathlib.Path(self.opts.output_dir).mkdir(parents=True, exist_ok=True)
+            # 体素化后以体素格式输出
+            output_file = self.opts.output_dir + stem + '.' + output_voxel_format
+            assert input_pc_format in ["ply", "pcd", "xyz", "pts", "txt"]
+            pointcloud2voxel(file_path, input_pc_format, voxel_size, output_file)
 
 
 if __name__ == "__main__":
@@ -1001,6 +1017,9 @@ if __name__ == "__main__":
         elif FLAGS.mode == 5:
             # 点云下采样
             formatFactory.pc_downsample()
+        elif FLAGS.mode == 10:
+            # 点云体素化
+            formatFactory.pc_voxel()
 
     elif platform.system() == "Linux":
         fl = get_all_files(FLAGS.input_dir, FLAGS.input_format)
@@ -1018,6 +1037,9 @@ if __name__ == "__main__":
         elif FLAGS.mode == 9:
             # 点云上采样
             formatFactory.pc_upsampling()
+        elif FLAGS.mode == 10:
+            # 点云体素化
+            formatFactory.pc_voxel()
 
     else:
         raise Exception("Unsupported Operating System!")
