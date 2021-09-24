@@ -13,7 +13,8 @@ parser.add_argument('--mode', type=int, default=0,
                          '7: Convert 3d mesh into a binary 3D voxel grid' \
                          '8: voxel grid visualization' \
                          '9: point cloud upsampling with an arbitrary scale(4X, 5.25X, 7.5X, ...)' \
-                         '10: create voxel grid from point cloud'
+                         '10: create voxel grid from point cloud' \
+                         '11: Convert point cloud into 3d mesh'
                     )
 
 # point cloud IO
@@ -75,4 +76,10 @@ parser.add_argument('--scale', type=float, default=4.0, help="the upsampling rat
 
 # convert point cloud to voxel
 parser.add_argument('--voxel', type=int, help="voxel_size")
+
+# convert point cloud into 3d mesh
+parser.add_argument('--constructor', type=str, default='poisson', help="[poisson, ball_pivoting]")
+parser.add_argument('--depth', type=int, default=9, help="hyperparameter of possion construction")
+
+
 FLAGS = parser.parse_args()

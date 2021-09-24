@@ -50,7 +50,14 @@ $ pip install requirements.txt
 - [x] registration
     - [x] ICP
     - [x] RANSAC
-- [ ] 3D reconstruction
+- [x] 3D reconstruction (pointcloud->mesh)
+    - [x] poisson surface reconstruction
+    - [x] ball pivoting
+    - [x] supported format:
+        - [x] pcd -> off | ply | obj | stl
+        - [x] xyz -> off | ply | obj | stl
+        - [x] pts -> off | ply | obj | stl
+        - [x] txt -> off | ply | obj | stl
 - [ ] visualization
 
 ### 3d Mesh

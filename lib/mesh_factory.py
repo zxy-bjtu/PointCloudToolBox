@@ -92,13 +92,13 @@ class Mesh_FormatFactory(object):
                     print("Done! result is saved in: ", output_file)
                 # ply->off
                 elif output_pc_format == 'off':
-                    mesh = o3d.io.read_triangle_mesh(file_path)
+                    mesh = read_polymesh(file_path)
                     # 获取文件名
                     stem = Path(file_path).stem
                     # 输出文件夹不存在则创建
                     pathlib.Path(self.opts.output_dir).mkdir(parents=True, exist_ok=True)
                     output_file = self.opts.output_dir + stem + '.off'
-                    o3d.io.write_triangle_mesh(output_file, mesh)
+                    write_mesh(output_file, mesh)
                     print("Done! result is saved in: ", output_file)
                 else:
                     raise Exception('Unsupported Output file format! Only [obj, stl, off] is supported!')

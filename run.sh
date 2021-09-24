@@ -189,4 +189,17 @@ python pc_factory.py --mode 9 --input_dir ../PU/Meta-PU/model/data/all_testset/4
 # supported pc format: [pcd, ply, xyz, pts, txt]
 python pc_factory.py --mode 10 --input_dir ../data/test --output_dir ../result/pc_voxel_grid/ --input_format pcd --output_format binvox --voxel 64
 
+# 13. convert 3d point cloud into mesh (3d construction)
+# supported pc format: [pcd, xyz, pts, txt]
+# supported mesh format: [off, ply, obj, stl]
+# poisson surface reconstruction
+python pc_factory.py --mode 11 --input_dir ../data/test --output_dir ../result/3d_poisson/ --input_format pcd --output_format off --constructor poisson --depth 9
+python pc_factory.py --mode 11 --input_dir ../data/test --output_dir ../result/3d_poisson/ --input_format xyz --output_format ply --constructor poisson --depth 9
+python pc_factory.py --mode 11 --input_dir ../data/test --output_dir ../result/3d_poisson/ --input_format pts --output_format obj --constructor poisson --depth 9
+python pc_factory.py --mode 11 --input_dir ../data/test --output_dir ../result/3d_poisson/ --input_format txt --output_format stl --constructor poisson --depth 9
+# ball pivoting
+python pc_factory.py --mode 11 --input_dir ../data/test --output_dir ../result/ball_pivoting/ --input_format pcd --output_format off --constructor ball_pivoting
+python pc_factory.py --mode 11 --input_dir ../data/test --output_dir ../result/ball_pivoting/ --input_format xyz --output_format ply --constructor ball_pivoting
+python pc_factory.py --mode 11 --input_dir ../data/test --output_dir ../result/ball_pivoting/ --input_format pts --output_format obj --constructor ball_pivoting
+python pc_factory.py --mode 11 --input_dir ../data/test --output_dir ../result/ball_pivoting/ --input_format txt --output_format stl --constructor ball_pivoting
 

@@ -23,6 +23,7 @@ from read_las import read_las
 from filter import passThroughFilter, voxelGrid, project_inliers, remove_outlier, StatisticalOutlierRemovalFilter
 from fps import farthest_point_sample, index_points
 from PointCloud2Voxel import pointcloud2voxel
+from reconstruction import poisson_surface_reconstruction, ball_pivot_surface_reconstruction
 
 
 class PointCloud_FormatFactory(object):
@@ -1001,6 +1002,35 @@ class PointCloud_FormatFactory(object):
             assert input_pc_format in ["ply", "pcd", "xyz", "pts", "txt"]
             pointcloud2voxel(file_path, input_pc_format, voxel_size, output_file)
 
+    def pc_construction(self):
+        """
+        点云的三维重建（点云->mesh)
+        :return:
+        """
+        print(":: Note: increase the density of point clouds before 3d reconstruction. #num of point cloud may >10w. ")
+        for i in range(self.filenum):
+            print("Processing: ", self.filelist[i])
+            file_path = self.filelist[i]  # 要处理的文件
+            input_pc_format = self.opts.input_format
+            output_mesh_format = self.opts.output_format
+            # 获取文件名
+            stem = Path(file_path).stem
+            # 输出文件夹不存在则创建
+            pathlib.Path(self.opts.output_dir).mkdir(parents=True, exist_ok=True)
+            # 体素化后以体素格式输出
+            output_file = self.opts.output_dir + stem + '.' + output_mesh_format
+            assert input_pc_format in ["pcd", "xyz", "pts", "txt"]
+            assert output_mesh_format in ["off", "ply", "obj", "stl"]
+
+            constructor_type = self.opts.constructor
+            depth = self.opts.depth
+            if constructor_type == 'poisson':
+                poisson_surface_reconstruction(file_path, input_pc_format, output_mesh_format, output_file, depth)
+            elif constructor_type == 'ball_pivoting':
+                ball_pivot_surface_reconstruction(file_path, input_pc_format, output_mesh_format, output_file)
+            else:
+                raise Exception("Unsupported 3d constructor!")
+
 
 if __name__ == "__main__":
     # 获取文件列表
@@ -1020,6 +1050,9 @@ if __name__ == "__main__":
         elif FLAGS.mode == 10:
             # 点云体素化
             formatFactory.pc_voxel()
+        elif FLAGS.mode == 11:
+            # 点云三维重建
+            formatFactory.pc_construction()
 
     elif platform.system() == "Linux":
         fl = get_all_files(FLAGS.input_dir, FLAGS.input_format)
@@ -1040,6 +1073,9 @@ if __name__ == "__main__":
         elif FLAGS.mode == 10:
             # 点云体素化
             formatFactory.pc_voxel()
+        elif FLAGS.mode == 11:
+            # 点云三维重建
+            formatFactory.pc_construction()
 
     else:
         raise Exception("Unsupported Operating System!")
