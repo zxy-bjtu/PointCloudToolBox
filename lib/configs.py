@@ -15,7 +15,8 @@ parser.add_argument('--mode', type=int, default=0,
                          '9: point cloud upsampling with an arbitrary scale(4X, 5.25X, 7.5X, ...)' \
                          '10: create voxel grid from point cloud' \
                          '11: Convert point cloud into 3d mesh' \
-                         '12: point cloud visualization'
+                         '12: point cloud visualization' \
+                         '13: 3d mesh visualization'
                     )
 
 # point cloud IO
@@ -84,5 +85,8 @@ parser.add_argument('--depth', type=int, default=9, help="hyperparameter of poss
 
 # point cloud visualization
 parser.add_argument('--scale_factor', type=float, default=0.1, help="the size of the ball diameter of the point")
+
+# mesh visualization
+parser.add_argument('--screenshot', type=str, help="the exported image path")
 
 FLAGS = parser.parse_args()

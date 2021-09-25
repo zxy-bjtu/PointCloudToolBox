@@ -212,3 +212,13 @@ python pointcloud_vis.py --mode 12 --input_file ../data/test/plant_0312.xyz --sc
 python pointcloud_vis.py --mode 12 --input_file ../data/test/simple1_3.las --scale_factor 0.1
 python pointcloud_vis.py --mode 12 --input_file ../data/test/103c9e43cdf6501c62b600da24e0965.txt --scale_factor 0.008
 python pointcloud_vis.py --mode 12 --input_file ../data/test/airplane.pts --scale_factor 0.008
+
+# 15. mesh visualization
+# supported mesh format: [ply, vtk, stl, obj, off, msh]
+python mesh_vis.py --mode 13 --input_file ../data/test/b1.ply --screenshot ../result/snapshot/
+python mesh_vis.py --mode 13 --input_file ../data/test/A380.obj --screenshot ../result/snapshot/
+python mesh_vis.py --mode 13 --input_file ../data/test/02691156.130934b3dd2fddfaaf4f36f817f09501.stl --screenshot ../result/snapshot/
+python mesh_vis.py --mode 13 --input_file ../result/mesh_2_voxel/ply2vtk/14.vtk --screenshot ../result/snapshot/
+python mesh_vis.py --mode 13 --input_file ../data/test/02691156.3fb7ceab42d7b17219ba010ddb4974fe.off --screenshot ../result/snapshot/
+python mesh_vis.py --mode 13 --input_file ../data/test/dumpbell.msh --screenshot ../result/snapshot/
+

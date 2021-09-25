@@ -7,5 +7,5 @@ numpy==1.21.2
 vtk==8.2.0
 python-pcl==0.3.0rc1
 pyntcloud==0.1.5
-pythreejs==2.3.0
 mayavi==4.7.1+vtk82
+pyvista==0.31.3

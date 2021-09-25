@@ -17,8 +17,8 @@ Dependent packages:
   - vtk==8.2.0
   - python-pcl==0.3.0rc1
   - pyntcloud==0.1.5
-  - pythreejs==2.3.0 
   - mayavi==4.7.1+vtk82
+  - pyvista==0.31.3
 
 How to install the environment:
 $ pip install requirements.txt
@@ -84,7 +84,8 @@ $ pip install requirements.txt
 - [x] mesh subdivision
     - [x] loop
     - [x] midpoint
-- [ ] 3d mesh visualization
+- [x] 3d mesh visualization
+    - [x] ply / vtk / stl / obj / off / msh
 
 ### voxel
 - [x] voxel visualization
