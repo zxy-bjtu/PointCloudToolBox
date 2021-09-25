@@ -168,8 +168,8 @@ python voxel_factory.py --mode 7 --input_dir ../data/test --output_dir ../result
 
 # 9. voxel grid visualization
 # supported input format: ["binvox", "mira"]
-python voxel_factory.py --mode 8 --input_dir ../result/mesh_2_voxel/ply2binvox --input_format binvox --input_file ../result/mesh_2_voxel/ply2binvox/14.binvox
-python voxel_factory.py --mode 8 --input_dir ../result/mesh_2_voxel/ply2mira --input_format mira --input_file ../result/mesh_2_voxel/ply2mira/14.mira
+python voxel_vis.py --mode 8 --input_file ../result/mesh_2_voxel/ply2binvox/14.binvox
+python voxel_vis.py --mode 8 --input_file ../result/mesh_2_voxel/ply2mira/14.mira
 
 # 10. point cloud registration
 # supported input format: [pcd,ply,xyz]
@@ -203,3 +203,12 @@ python pc_factory.py --mode 11 --input_dir ../data/test --output_dir ../result/b
 python pc_factory.py --mode 11 --input_dir ../data/test --output_dir ../result/ball_pivoting/ --input_format pts --output_format obj --constructor ball_pivoting
 python pc_factory.py --mode 11 --input_dir ../data/test --output_dir ../result/ball_pivoting/ --input_format txt --output_format stl --constructor ball_pivoting
 
+# 14. point cloud visualization
+# supported pc format: [pcd, xyz, pts, ply, txt, las]
+cd ../common
+python pointcloud_vis.py --mode 12 --input_file ../data/test/000001.pcd --scale_factor 0.1
+python pointcloud_vis.py --mode 12 --input_file ../data/test/14.ply --scale_factor 0.8
+python pointcloud_vis.py --mode 12 --input_file ../data/test/plant_0312.xyz --scale_factor 0.1
+python pointcloud_vis.py --mode 12 --input_file ../data/test/simple1_3.las --scale_factor 0.1
+python pointcloud_vis.py --mode 12 --input_file ../data/test/103c9e43cdf6501c62b600da24e0965.txt --scale_factor 0.008
+python pointcloud_vis.py --mode 12 --input_file ../data/test/airplane.pts --scale_factor 0.008

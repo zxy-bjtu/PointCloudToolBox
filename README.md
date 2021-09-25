@@ -18,6 +18,7 @@ Dependent packages:
   - python-pcl==0.3.0rc1
   - pyntcloud==0.1.5
   - pythreejs==2.3.0 
+  - mayavi==4.7.1+vtk82
 
 How to install the environment:
 $ pip install requirements.txt
@@ -26,14 +27,14 @@ $ pip install requirements.txt
 ## Todo
 ### Point Cloud
 - [x] format conversion (pointcloud->pointcloud)  
-    - [x] pcd -> xyz | pts | txt | csv | ply 
-    - [x] las -> pcd | xyz | pts | ply | txt | csv
-    - [x] ply -> pcd | xyz | pts | txt | csv   
-    - [x] xyz -> pcd | pts | ply | txt | csv
-    - [x] pts -> pcd | xyz | ply | txt | csv
-    - [x] txt -> pcd | ply | xyz | pts
+    - [x] pcd -> xyz / pts / txt / csv / ply
+    - [x] las -> pcd / xyz / pts / ply / txt / csv
+    - [x] ply -> pcd / xyz / pts / txt / csv   
+    - [x] xyz -> pcd / pts / ply / txt / csv
+    - [x] pts -> pcd / xyz / ply / txt / csv
+    - [x] txt -> pcd / ply / xyz / pts
 - [x] point cloud voxelization (pointcloud->voxel grid)
-    - [x] pcd | ply | pts | txt | xyz -> binvox
+    - [x] pcd / ply / pts / txt / xyz -> binvox
 - [x] downsampling
     - [x] farthest point sampling(FPS)
     - [x] random sampling
@@ -54,17 +55,18 @@ $ pip install requirements.txt
     - [x] poisson surface reconstruction
     - [x] ball pivoting
     - [x] supported format:
-        - [x] pcd -> off | ply | obj | stl
-        - [x] xyz -> off | ply | obj | stl
-        - [x] pts -> off | ply | obj | stl
-        - [x] txt -> off | ply | obj | stl
-- [ ] visualization
+        - [x] pcd -> off / ply / obj / stl
+        - [x] xyz -> off / ply / obj / stl
+        - [x] pts -> off / ply / obj / stl
+        - [x] txt -> off / ply / obj / stl
+- [x] visualization
+    - [x] pcd / xyz / pts / ply / las / txt
 
 ### 3d Mesh
 - [x] format conversion (mesh->mesh)
-    - [x] ply -> obj | stl | off
-    - [x] obj -> ply | off | stl
-    - [x] off -> ply | obj | stl
+    - [x] ply -> obj / stl / off
+    - [x] obj -> ply / off / stl
+    - [x] off -> ply / obj / stl
 - [x] down sampling into point cloud
     - [x] poisson disk sampling
     - [x] uniform sampling
@@ -74,11 +76,11 @@ $ pip install requirements.txt
     - [x] simple neighbour average
 - [x] Calculate the surface area and volume of 3D Mesh
 - [x] Convert 3d mesh to voxel grid
-    - [x] obj -> binvox | hips | mira | vtk | msh
-    - [x] off -> binvox | hips | mira | vtk | msh
-    - [x] dxf -> binvox | hips | mira | vtk | msh
-    - [x] ply -> binvox | hips | mira | vtk | msh
-    - [x] stl -> binvox | hips | mira | vtk | msh
+    - [x] obj -> binvox / hips / mira / vtk / msh
+    - [x] off -> binvox / hips / mira / vtk / msh
+    - [x] dxf -> binvox / hips / mira / vtk / msh
+    - [x] ply -> binvox / hips / mira / vtk / msh
+    - [x] stl -> binvox / hips / mira / vtk / msh
 - [x] mesh subdivision
     - [x] loop
     - [x] midpoint
@@ -86,8 +88,7 @@ $ pip install requirements.txt
 
 ### voxel
 - [x] voxel visualization
-    - [x] binvox
-    - [x] mira
+    - [x] binvox / mira
 
 ## Use
 You can find command in `run.sh`.

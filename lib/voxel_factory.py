@@ -56,25 +56,6 @@ class Voxel_FormatFactory(object):
             else:
                 raise Exception("Unsupported operating system!")
 
-    def voxel_visualzation(self):
-        """
-        voxel grid visualization, supported format:["binvox", "mira"]
-        :return:
-        """
-        for i in range(self.filenum):
-            print("Processing: ", self.filelist[i])
-            file_path = self.filelist[i]  # 要处理的文件
-            input_pc_format = self.opts.input_format
-            assert input_pc_format in ["binvox", "mira"]
-            file = self.opts.input_file
-            if file_path == file:
-                if platform.system() == "Windows":
-                    os.system('viewvox -ki ' + file)
-                elif platform.system() == "Linux":
-                    os.system('viewvox -ki ' + file)
-                else:
-                    raise Exception("Unsupported operating system!")
-
 
 if __name__ == "__main__":
     # 获取文件列表
@@ -84,9 +65,6 @@ if __name__ == "__main__":
     if FLAGS.mode == 7:
         # mesh转换成体素网格
         formatFactory.mesh_voxel()
-    elif FLAGS.mode == 8:
-        # 体素网格可视化
-        formatFactory.voxel_visualzation()
 
 
 
