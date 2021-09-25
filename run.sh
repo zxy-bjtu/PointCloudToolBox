@@ -187,7 +187,11 @@ python pc_factory.py --mode 9 --input_dir ../PU/Meta-PU/model/data/all_testset/4
 
 # 12. Convert 3d point cloud into voxel grid
 # supported pc format: [pcd, ply, xyz, pts, txt]
+# supported voxel format: [binvox]
+# batch processing
 python pc_factory.py --mode 10 --input_dir ../data/test --output_dir ../result/pc_voxel_grid/ --input_format pcd --output_format binvox --voxel 64
+# single processing
+python PointCloud2Voxel.py --mode 10 --input_file ../data/test/plant_0312.xyz --output_dir ../result/pc_voxel_grid/ --output_format binvox --voxel 64
 
 # 13. convert 3d point cloud into mesh (3d construction)
 # supported pc format: [pcd, xyz, pts, txt]
@@ -208,7 +212,7 @@ python pc_factory.py --mode 11 --input_dir ../data/test --output_dir ../result/b
 cd ../common
 python pointcloud_vis.py --mode 12 --input_file ../data/test/000001.pcd --scale_factor 0.1
 python pointcloud_vis.py --mode 12 --input_file ../data/test/14.ply --scale_factor 0.8
-python pointcloud_vis.py --mode 12 --input_file ../data/test/plant_0312.xyz --scale_factor 0.1
+python pointcloud_vis.py --mode 12 --input_file ../data/test/ --scale_factor 0.1
 python pointcloud_vis.py --mode 12 --input_file ../data/test/simple1_3.las --scale_factor 0.1
 python pointcloud_vis.py --mode 12 --input_file ../data/test/103c9e43cdf6501c62b600da24e0965.txt --scale_factor 0.008
 python pointcloud_vis.py --mode 12 --input_file ../data/test/airplane.pts --scale_factor 0.008

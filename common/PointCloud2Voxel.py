@@ -4,6 +4,8 @@ import os, sys
 import shutil
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(BASE_DIR)
+sys.path.append(os.path.join(BASE_DIR, '../lib'))
+from configs import FLAGS
 import binvox_rw
 from pathlib import Path
 import pathlib
@@ -111,3 +113,15 @@ def pointcloud2voxel(input_file, input_pc_format, voxel_size, output_file):
     tmp_dir = "../data/tmp/"
     if os.path.exists(tmp_dir):
         shutil.rmtree(tmp_dir)
+
+
+if __name__ == "__main__":
+    if FLAGS.mode == 10:
+        file_path = FLAGS.input_file
+        output_path = FLAGS.output_dir
+        voxel_size = FLAGS.voxel
+        ext = os.path.splitext(file_path)[-1][1:]
+        stem = pathlib.Path(file_path).stem
+        output_format = FLAGS.output_format
+        output_file = output_path + stem + "." + output_format
+        pointcloud2voxel(file_path, ext, voxel_size, output_file)
