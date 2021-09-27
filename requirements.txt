@@ -1,5 +1,5 @@
 scipy==1.6.2
-torch==1.7.1+cu101
+torch==1.4.0+cu100
 openmesh==1.1.6
 open3d==0.13.0
 plyfile==0.7.4
