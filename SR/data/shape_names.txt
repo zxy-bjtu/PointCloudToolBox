@@ -1,0 +1,10 @@
+bathtub
+bed
+chair
+desk
+dresser
+monitor
+night stand
+sofa
+table
+toilet

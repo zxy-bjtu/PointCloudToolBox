@@ -97,7 +97,7 @@ It is noticed that package **python-pcl** is not easy to install. You can refer 
 ## Todo
 ### Point Cloud
 - [ ] Basic operation of point cloud
-    - [ ] jitter
+    - [x] shuffle / jitter / rotate / shift / add Gaussian noise
     - [ ] generate graph
         - [ ] knn
         - [ ] ball query
